@@ -53,11 +53,15 @@ class HomeController extends Controller
         //$userId = Auth::id();
 
         $user = User::find(Auth::id());
+        $volunteers = User::all();
+        $clocks = Clock::all();
         $data = array(
             'user' => $user,
-            'areas' => Area::all()
+            'areas' => Area::all(),
+            'volunteers' => $volunteers,
+            'clocks' => $clocks
         );
-        return view('home', $data);
+        return view('admin', $data);
     }
 
     public function coordinator()
