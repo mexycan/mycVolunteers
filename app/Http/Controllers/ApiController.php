@@ -289,6 +289,11 @@ class ApiController extends Controller
         return $user;
     }
 
+    /**
+     * List all pending times by Area ID
+     * @param  int $area_id Area ID
+     * @return array          
+     */
     public function getPedingTimesByArea($area_id)
     {   
         return Clock::where(['area_id' => $area_id, 'status' => 'pending approval'])->get();        
@@ -299,10 +304,61 @@ class ApiController extends Controller
      * @param  int $clock_id id
      * @return [type]           [description]
      */
-    public function approveTime($clock_id)
+    public function approveClock($clock_id)
     {
-        Clock::where(['id' => $clock_id, 'status' => 'pending approval'])->update();
+        Clock::where(['id' => $clock_id, 'status' => 'pending approval'])->update(['status' => 'approved']);
         return ['status' => 'ok'];
+    }
+
+    public function rejectClock($clock_id)
+    {
+        Clock::where(['id' => $clock_id, 'status' => 'pending approval'])->update(['status' => 'rejected']);
+        return ['status' => 'ok'];
+    }
+
+    
+    public function setTicket($params){
+
+        if(isset($params->id)){
+            $ticket = Ticket::find($params->id);
+        } else if(isset($params->ticket_id)){
+            $ticket = Ticket::find($params->ticket_id);
+        } else {
+            $ticket = new Ticket;    
+        }
+      
+        if(isset($params->user_id)){
+            $ticket->user_id = $params->user_id;
+        }
+        if(isset($params->coordinator_id)){
+            $ticket->coordinator_id = $params->coordinator_id;
+        }
+        if(isset($params->status)){
+            $ticket->status = $params->status;
+        }
+        $ticket->save();
+
+        return $ticket;
+    }
+
+    public function getTicket($params){
+        $query = Ticket::query();
+
+        if(isset($params->id)){
+            $query = $query->where('id', $params->id);
+        }
+        if(isset($params->user_id)){
+            $query = $query->where('type', $params->user_id);
+        }
+
+        if(isset($params->coordinator_id)){
+            $query = $query->where('coordinator_id', $params->coordinator_id);
+        }
+        if(isset($params->status)){
+            $query = $query->where('status', $params->status);
+        }
+
+        return $query->get();
     }
 
 }

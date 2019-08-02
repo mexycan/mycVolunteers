@@ -21,3 +21,6 @@ Route::post('/clock', 'ApiController@clockHandler');
 
 //Cordinator needs to access pending times per area
 Route::get('/pendingtimes/{area_id}', 'ApiController@getPedingTimesByArea');
+
+Route::get('/clock/approve/{clock_id}', 'ApiController@approveClock');
+Route::get('/clock/reject/{clock_id}', 'ApiController@rejectClock');
