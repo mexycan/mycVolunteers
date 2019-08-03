@@ -56,10 +56,35 @@
             {[{ clock.id  }]}
         </div>
         <div class="col">
+        {[{ clock.userFirstname  }]}
+        {[{ clock.userLastName  }]}
+        <small>
+        {[{ clock.userEmail  }]}
+        </small>
+        </div>
+        <div class="col">
+            {[{ clock.area_id  }]}
+        </div>
+        <div class="col">
             {[{ clock.hours  }]} hours
         </div>
         <div class="col">
             {[{ clock.status  }]}
+        </div>
+        <div class="col">
+            <div class="approval{[{clock.id}]}" ng-if="clock.status == 'pending approval'">
+                <button ng-click="clock = approveHours(clock)" class="btn btn-sm btn-outline-success ">
+                    Aprrove
+                </button>
+                <button ng-click="clock = approveHours(clock, 'rejected')" class="btn btn-sm btn-outline-warning approval{[{clock.id}]}">
+                    Reject
+                </button>
+            </div>
+            <div class="active{[{clock.id}]}" ng-if="clock.status == 'active'">
+                <button ng-click="clock = finishClock(clock)" class="btn btn-sm btn-outline-info ">
+                    Clock-Out
+                </button>
+            </div>
         </div>
     </div>
 
@@ -98,19 +123,19 @@ app.controller('pwaController', function($scope, $http) {
     $scope.endPoint = '<?php echo url('/api/clock'); ?>';
 
 
-    $scope.finishClock = function(id){
-        $('.clockin, .clockout').hide();
+    $scope.finishClock = function(clock){
+        $('.active'+clock.id).hide('fast');
         var data = {
             action: 'setClock',
-            clockId: id,
+            clockId: clock.id,
             clock_finish: 'now',
             status: 'pending approval'
         };
         $http.post($scope.endPoint, JSON.stringify(data)).then(function (response) {
                 if (response.data){
-                    console.log(response.data);
-                    $scope.getClocks();
-                    $('.clockin, .clockout').show();
+                    var returnedClock = response.data;
+                    clock.status = returnedClock.status;
+                    $('.active'+clock.id).show('fast');
                 }
             }, function (response) {
                 console.log(response);
@@ -137,8 +162,28 @@ app.controller('pwaController', function($scope, $http) {
             }, function (response) {
                 console.log(response);
         });
-        
     };
+    $scope.approveHours = function(clock, incomingStatus = 'approved'){
+        var clockId = clock.id;
+        $('.approval'+clock.id).hide('fast');
+        var data = {
+            action: 'setClock',
+            clock_id: clock.id,
+            status: incomingStatus,
+            approved_at: 'now'
+        };
+        $http.post($scope.endPoint, JSON.stringify(data)).then(function (response) {
+                if (response.data){
+                    console.log(response.data);
+                    var returnedClock = response.data;
+                    clock.status = returnedClock.status;
+                    $('.approval'+clock.id).show('fast');
+                    return response.data;
+                }
+            }, function (response) {
+                console.log(response);
+        });
+    }
 });
 </script>
 

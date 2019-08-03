@@ -14,6 +14,10 @@ class Area extends Model
     protected $table = 'areas';
 
     public function user(){
-        return $this->belongsTo('App\Models\Clock');
+        return $this->belongsTo('App\user');
+    }
+
+    public function clock(){
+        return $this->hasMany('App\Models\Clock');
     }
 }

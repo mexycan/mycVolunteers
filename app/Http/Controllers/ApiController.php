@@ -126,6 +126,14 @@ class ApiController extends Controller
             }
         }
 
+        if(isset($params->approved_at)){
+            if($params->approved_at == 'now'){
+                $clock->approved_at = date('Y-m-d H:i:s');
+            } else {
+                $clock->approved_at = $params->approved_at;
+            }
+        }
+
         if(!isset($params->clock_start) && !isset($params->clock_finish)){
             $clock->clock_start = date('Y-m-d H:i:s');
             

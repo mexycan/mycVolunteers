@@ -54,7 +54,20 @@ class HomeController extends Controller
 
         $user = User::find(Auth::id());
         $volunteers = User::all();
-        $clocks = Clock::all();
+        $clocksPre = Clock::all();
+
+        $clocks = array();
+        foreach($clocksPre as $clock){
+            $clock->userFirstname = $clock->user->firstname;
+            $clock->userLastname = $clock->user->lastname;
+            $clock->userEmail = $clock->user->email;
+
+            if(isset($clock->area)){
+                //$clock->areaName = $clock->area->name;
+            }
+            $clocks[] = $clock;
+        }
+
         $data = array(
             'user' => $user,
             'areas' => Area::all(),
