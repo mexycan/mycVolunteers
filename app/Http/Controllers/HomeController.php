@@ -82,8 +82,8 @@ class HomeController extends Controller
         //$userId = Auth::id();
 
         $user = User::find(Auth::id());
-        $volunteers = User::where('area_id', $user->area_id);
-        $clocks = Clock::where('area_id', $user->area_id);
+        $volunteers = User::where('area_id', $user->area_id)->get();
+        $clocks = Clock::where('area_id', $user->area_id)->get();
         $data = array(
             'user' => $user,
             'volunteers' => $volunteers,
