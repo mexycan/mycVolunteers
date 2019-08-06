@@ -28,6 +28,14 @@
     <div class="row">
         <div class="col">
             {[{ assignedVolunteers  }]} <small>assigned volunteers</small>
+        </div>        
+    </div>
+    <div class="row">       
+        <div class="col-6">
+            <select class="form-control form-control-lg is-valid" name="volunteers" id="volunteers" 
+                ng-model="volunteers.selected"
+                ng-options="option.firstname for option in volunteers track by option.id">
+            </select>
         </div>
     </div>
 </div>
@@ -48,9 +56,7 @@ app.controller('pwaController', function($scope, $http) {
     $scope.clocks = {};
     $scope.assignedVolunteers  = <?php echo sizeof($volunteers); ?>;
 
-    $scope.volunteers = [
-      
-    ];
+    $scope.volunteers = <?php echo $volunteers; ?>;    
 
     $scope.endPoint = '<?php echo url('/api/clock'); ?>';
 
