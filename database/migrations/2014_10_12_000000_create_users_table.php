@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('phone');
             $table->integer('age');
             $table->string('area');
-            $table->enum('type', ['admin', 'coordinator', 'volunteer'])->default('volunteer');    
+            // $table->enum('type', ['admin', 'coordinator', 'volunteer'])->default('volunteer');    
             $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();
